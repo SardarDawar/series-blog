@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load like %}
+
+
+{% block content %}
+<main  id="col-main">
+
+    <iframe src="{{episode.src}}" scrolling="no" frameborder="0" width="100%" height="520 rem" allowfullscreen="true"
+        webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
+    <br>
+    <div style="text-align: center;">
+        <!-- <h3 style="font-weight: bold;">{{episode.series.name}} - {{episode.season.name}} - {{episode.name}}</h3> -->
+        <h3 style="font-weight: bold;">{{episode.name}}</h3>
+    </div>
+    <br>
+    <div class="content" style="padding: 0% 5%;" >
+        <div class="conteiner">
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                    <form action="{% url 'like_ep' %}" id="like_form" class="like-form" method="POST">
+                        {% csrf_token %}
+                        <input hidden type="text" name="slug" id="ep_id_2" value="{{episode.slug}}">
+                        {% if episode.playlist %}
+                        <button type="submit" class="btn btn-primary" id="btnlike">
+                            {% if episode|is_in_like:request.session.pl_like %}
+                            Dislike
+                            {% else %}
+                            Like
+                            {% endif %}
+                        </button>
+                        {% else %}
+                        <button type="submit" class="btn btn-primary" id="btnlike">
+                            {% if episode|is_in_like:request.session.ep_like %}
+                            Dislike
+                            {% else %}
+                            Like
+                            {% endif %}
+                        </button>
+                        {% endif %}
+                        <div class="container m-0 p-0">
+                            <div class="row m-0 p-0">
+                                <div id="total_likes">{{ episode.likes }}</div>
+                                <div>- Likes</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                  <div class="sharethis-inline-share-buttons"></div>
+                </div>
+
+                </div>
+                <h4>Comments</h4>
+               
+                <div id="comment_box">
+                    {% if comments %}
+                    {% for comment in comments %}
+                    <b>{{ comment.com_name }}</b> - <i><small>({{ comment.dateAdded }})</small></i><br>
+                    {{ comment.body }} <br>
+                    <hr>
+                    {% endfor %}
+                    {% else %}
+                    <h6>No comments yet..</h6> <br>
+                    <hr>
+                    {% endif %}
+                </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <h4 style="text-align: center;" >Add Comments</h4>
+                    <p style="font-weight: bold;text-align: center;"><i> Your email will not be published</i></p>
+                    
+                    <br>
+                    <form id="comment_form" action="{% url 'comment' episode.slug %}" class="form-style-6" method="POST">
+                        {% csrf_token %}
+                        <input type="text" id="ep_id" value="{{ episode.slug }}" hidden>
+                
+                        <input type="text" name="name" id="name" placeholder="Enter Name" />
+                        <input type="email" name="email" id="email" placeholder="Enter email" />
+                        <textarea name="c_body" id="c_body" cols="30" rows="10" placeholder="Write Comment"></textarea>
+                        <input type="submit" value="Comment" />
+                
+                
+                
+                    </form>
+                </div>
+             
+            </div>
+        </div>
+    </div>
+
+
+
+</main>
+    {% endblock content %}
+
+
+    {% block scripts %}
+    <script>
+        $("document").ready(function () {
+            $("#comment_form").submit(function (e) {
+                console.log('Save Button clicked!')
+                e.preventDefault();
+                const p_url = $(this).attr('action');
+                const comment_text = $('#comment_box').text();
+                const trim = $.trim(comment_text);
+                console.log(trim)
+                let res;
+                var email = $('#email').val();
+                var c_body = $('#c_body').val();
+                var slug = $('#ep_id').val();
+                var name = $('#name').val();
+                this.reset();
+                $.ajax({
+                    type: 'POST',
+                    url: p_url,
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                        'slug': slug,
+                        'email': email,
+                        'c_body': c_body,
+                        'name': name,
+                    },
+                    success: function (response) {
+                        if (trim == 'No comments yet..') {
+                            $('#comment_box').html(`<strong>${name}</strong> - <small><small>Just Now</small></small><br>
+                    ${c_body} <br><hr>`);
+                        }
+                        else {
+                            $('#comment_box').append(
+                                `<strong>${name}</strong> - <small><small>Just Now</small></small><br>
+                    ${c_body} <br><hr>`)
+                        }
+
+
+                    },
+                    error: function (response) {
+                        console.log('error', response)
+                    }
+                })
+            });
+
+
+
+            $('#like_form').on('submit', function (e) {
+                e.preventDefault();
+                let newCount = 0;
+                var like_text = $('#btnlike').text();
+                like_text = $.trim(like_text);
+                var slug = $('#ep_id_2').val();
+                console.log('slug')
+                console.log(slug)
+                const p_url = $(this).attr('action');
+                var likesCount = $('#total_likes').text();
+                likesCount = $.trim(likesCount);
+                var likes = parseInt(likesCount);
+
+
+
+                $.ajax({
+                    type: 'POST',
+                    url: p_url,
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                        'slug': slug,
+                    },
+                    success: function (response) {
+                        if (like_text == 'Dislike') {
+                            newCount = likes - 1;
+                            $('#btnlike').text('Like');
+                        }
+                        else {
+                            newCount = likes + 1;
+                            $('#btnlike').text('Dislike');
+                        }
+                        $('#total_likes').text(newCount);
+                    },
+                    error: function (response) {
+                        console.log('error', response)
+                    }
+                });
+            });
+
+
+
+
+        });
+
+
+
+    </script>
+    {% endblock scripts %}

@@ -1,0 +1,273 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179411862-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'UA-179411862-1');
+  </script>
+  <!-- *********** Social Sharing Script ************ -->
+  <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=602d3c143b3a4b00152e3751&product=inline-share-buttons" async="async"></script>
+  <!-- ************Social Sharing Script************ -->
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700%7CMontserrat:300,400,600,700">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="{% static 'icons/fontawesome/css/fontawesome-all.min.css' %}">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="{% static 'icons/Iconsmind__Ultimate_Pack/Line%20icons/styles.min.css' %}">
+  <!-- iconsmind.com Icons -->
+  
+
+  <title>SMOVIESHD</title>
+
+  <style type="text/css">
+    .form-style-6 {
+      font: 95% Arial, Helvetica, sans-serif;
+      max-width: 800px;
+      margin: 10px auto;
+      padding: 16px;
+      background: #F7F7F7;
+    }
+
+    .form-style-6 h1 {
+      background: #43D1AF;
+      padding: 20px 0;
+      font-size: 140%;
+      font-weight: 300;
+      text-align: center;
+      color: #fff;
+
+    }
+
+    .form-style-6 input[type="text"],
+    .form-style-6 input[type="date"],
+    .form-style-6 input[type="datetime"],
+    .form-style-6 input[type="email"],
+    .form-style-6 input[type="number"],
+    .form-style-6 input[type="search"],
+    .form-style-6 input[type="time"],
+    .form-style-6 input[type="url"],
+    .form-style-6 textarea,
+    .form-style-6 select {
+      outline: none;
+      box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      width: 100%;
+      background: #fff;
+      margin-bottom: 4%;
+      border: 1px solid #ccc;
+      padding: 3%;
+      color: #555;
+      font: 95% Arial, Helvetica, sans-serif;
+    }
+
+    .form-style-6 input[type="text"]:focus,
+    .form-style-6 input[type="date"]:focus,
+    .form-style-6 input[type="datetime"]:focus,
+    .form-style-6 input[type="email"]:focus,
+    .form-style-6 input[type="number"]:focus,
+    .form-style-6 input[type="search"]:focus,
+    .form-style-6 input[type="time"]:focus,
+    .form-style-6 input[type="url"]:focus,
+    .form-style-6 textarea:focus,
+    .form-style-6 select:focus {
+      box-shadow: 0 0 5px #43D1AF;
+      padding: 3%;
+      border: 1px solid #43D1AF;
+    }
+
+    .form-style-6 input[type="submit"],
+    .form-style-6 input[type="button"] {
+      box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      width: 100%;
+      padding: 3%;
+      background: #43D1AF;
+      border-bottom: 2px solid #30C29E;
+      border-top-style: none;
+      border-right-style: none;
+      border-left-style: none;
+      color: #fff;
+    }
+
+    .form-style-6 input[type="submit"]:hover,
+    .form-style-6 input[type="button"]:hover {
+      background: #2EBC99;
+    }
+  </style>
+
+
+  <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=602cb6a76d01a000119a0897&product=inline-share-buttons" async="async"></script>
+</head>
+
+<body>
+  <div id="sidebar-bg">
+
+    <header id="videohead-pro" class="sticky-header">
+      <div id="video-logo-background"><a href="{% url 'home' %}"><img src="{% static 'images/logo-video-layout.png' %}" alt="Logo"></a></div>
+
+      <div id="video-search-header">
+        <div id="search-icon-more" ></div>
+
+        <form action="{% url 'home' %}" method="GET" id="video_search">
+          <input type="text" name="q" placeholder="Search for Movies or TV Series" id="video_search_in" aria-label="Search"
+            value="{{query}}">
+
+        </form><!-- #video-search-header-filtering-padding -->
+        
+      </div><!-- close .video-search-header -->
+
+      <div id="mobile-bars-icon-pro" class="noselect"><i class="fas fa-bars"></i></div>
+      <div class="clearfix"></div>
+			
+			<nav id="mobile-navigation-pro">
+			
+				<ul id="mobile-menu-pro">
+	            <li>
+	              <a href="{% url 'series' %}">
+						<span class="icon-Old-TV"></span>
+	                TV Series
+	              </a>
+	            <li>
+	            <li>
+	              <a href="{% url 'movie' %}">
+						<span class="icon-Reel"></span>
+	                Movies
+	              </a>
+	            </li>
+	            <li>
+	              <a href="{% url 'playlist' %}">
+						<span class="icon-Movie"></span>
+	                Playlists
+	              </a>
+	            </li>
+	            <li>
+	              <a href="{% url 'newarrival' %}">
+						<span class="icon-Movie-Ticket"></span>
+	                New Arrivals
+	              </a>
+	            </li>
+	            <li>
+	              <a href="{% url 'comingsoon' %}">
+						<span class="icon-Clock"></span>
+	                Coming Soon
+	              </a>
+	            </li>
+				</ul>
+				<div class="clearfix"></div>
+				
+				<div id="search-mobile-nav-pro">
+					<form action="{% url 'home' %}" method="GET" id="video_search">
+            <input type="text" name="q" placeholder="Search for Movies or TV Series" id="video_search_in" aria-label="Search"
+              value="{{query}}">
+          </form>
+				</div>
+				
+			</nav>
+    </header>
+
+
+
+    <nav id="sidebar-nav">
+      <!-- Add class="sticky-sidebar-js" for auto-height sidebar -->
+      <ul id="vertical-sidebar-nav" class="sf-menu">
+        <!-- <li class="normal-item-pro current-menu-item"> -->
+        <li id="Series" class="normal-item-pro">
+          <a href="{% url 'series' %}">
+            <span class="icon-Old-TV"></span>
+            TV Series
+          </a>
+        </li>
+        <li id="Movies" class="normal-item-pro">
+          <a href="{% url 'movie' %}">
+            <span class="icon-Reel"></span>
+            Movies
+          </a>
+        </li>
+        <li id="Playlist" class="normal-item-pro">
+          <a href="{% url 'playlist' %}">
+            <span class="icon-Movie"></span>
+            Playlists
+          </a>
+        </li>
+        <li id="New-Arrival" class="normal-item-pro">
+          <a href="{% url 'newarrival' %}">
+            <span class="icon-Movie-Ticket"></span>
+            New Arrivals
+          </a>
+        </li>
+        <li class="normal-item-pro">
+          <a href="{% url 'comingsoon' %}">
+            <span class="icon-Clock"></span>
+            Coming Soon
+          </a>
+        </li>
+
+      </ul>
+      <div class="clearfix"></div>
+    </nav>
+    {% block side %}
+      {% endblock side %}
+    
+
+
+      {% block content %}
+      {% endblock content %}
+
+    
+
+
+  </div><!-- close #sidebar-bg-->
+
+  <!-- Required Framework JavaScript -->
+  <script src="{% static 'js/libs/jquery-3.3.1.min.js' %}"></script><!-- jQuery -->
+  <script src="{% static 'js/libs/popper.min.js' %}" defer></script><!-- Bootstrap Popper/Extras JS -->
+  <script src="{% static 'js/libs/bootstrap.min.js' %}" defer></script><!-- Bootstrap Main JS -->
+  <!-- All JavaScript in Footer -->
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- Additional Plugins and JavaScript -->
+  <script src="{% static 'js/navigation.js' %}" defer></script><!-- Header Navigation JS Plugin -->
+  <script src="{% static 'js/jquery.flexslider-min.js' %}" defer></script><!-- FlexSlider JS Plugin -->
+  <script src="{% static 'js/jquery-asRange.min.js' %}" defer></script><!-- Range Slider JS Plugin -->
+  <script src="{% static 'js/circle-progress.min.js' %}" defer></script><!-- Circle Progress JS Plugin -->
+  <script src="{% static 'js/afterglow.min.js' %}" defer></script><!-- Video Player JS Plugin -->
+  <script src="{% static 'js/script.js' %}" defer></script><!-- Custom Document Ready JS -->
+  <script src="{% static 'js/script-dashboard.js' %}" defer></script>
+  <!-- Custom Document Ready for Dashboard Only JS -->
+
+  <script>
+    $( function() {
+      
+      $( "#video_search_in" ).autocomplete({
+        source: "{% url 'autocomp' %}",
+        minLength: 3,
+      });
+    } );
+    </script>
+
+  {% block javascript %}
+  {% endblock javascript %}
+
+
+
+  {% block scripts %}
+  {% endblock scripts %}
+
+</body>
+
+<!-- Mirrored from progression-studios.com/skrn/dashboard-home.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 08 Feb 2021 15:37:02 GMT -->
+
+</html>

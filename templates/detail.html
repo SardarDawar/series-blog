@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}	
+{% block content %}	
+		<div id="content-sidebar-pro">
+			
+			<div id="content-sidebar-image">
+				<img src="{{ content.img.url }}" alt="Movie Poster">
+			</div>
+			
+			<div class="content-sidebar-section">
+				<h2 class="content-sidebar-sub-header">{{ content.name }}</h2>
+				<ul class="progression-studios-slider-rating">
+					<li>{{content.PG}}</li><li>{{content.quality}}</li>
+				</ul>
+			</div><!-- close .content-sidebar-section -->
+
+			<div class="content-sidebar-section">
+				<h4 class="content-sidebar-sub-header">Genre</h4>
+				<div class="content-sidebar-short-description">{{ content.genre }}</div>
+			</div><!-- close .content-sidebar-section -->
+			
+			<div class="content-sidebar-section">
+				<h4 class="content-sidebar-sub-header">Release Date</h4>
+				<div class="content-sidebar-short-description">{{ content.release_date }}</div>
+			</div><!-- close .content-sidebar-section -->
+			
+			<div class="content-sidebar-section">
+				<h4 class="content-sidebar-sub-header">Length</h4>
+				<div class="content-sidebar-short-description">{{ content.length }}</div>
+			</div><!-- close .content-sidebar-section -->
+			
+			<div class="content-sidebar-section">
+				<h4 class="content-sidebar-sub-header">Director</h4>
+				<div class="content-sidebar-short-description">{{ content.director }}</div>
+			</div><!-- close .content-sidebar-section -->
+
+			<div class="content-sidebar-section">
+				<h4 class="content-sidebar-sub-header">Language</h4>
+				<div class="content-sidebar-short-description">{{ content.language }}</div>
+			</div><!-- close .content-sidebar-section -->
+
+			<div class="content-sidebar-section">
+				<h4 class="content-sidebar-sub-header">Cast</h4>
+				<div class="content-sidebar-short-description">{{ content.cast }}</div>
+			</div><!-- close .content-sidebar-section -->
+
+			
+			
+			
+		</div><!-- close #content-sidebar-pro -->
+		
+		
+		<main id="col-main-with-sidebar">
+			
+			<div id="movie-detail-header-pro" style="background-image:url('images/demo/dashboard-movie-poster.jpg');height: 60vh;">
+				
+				
+				
+				
+	         <img src="{{content.poster.url}}" width="960" height="540" alt="Poster">
+			   
+				
+				
+				<div id="movie-detail-gradient-pro"></div>
+			</div><!-- close #movie-detail-header-pro -->
+			
+			{% if content.src %}
+			<div id="movie-detail-rating">
+				<div class="dashboard-container">
+					<div class="row">
+						<a href="{% url 'video' content.slug %}"><button class="btn btn-primary">Watch full movie</button></a>
+					</div><!-- close .row -->
+				</div><!-- close .dashboard-container -->
+			</div><!-- close #movie-detail-rating -->
+			
+			{% else %}
+			<br>
+			{% endif %}
+			
+			<div class="dashboard-container">
+				
+				
+				<div class="movie-details-section">
+					<h2>Storyline</h2>
+					<p> {{ content.description|safe }} </p>
+				</div><!-- close .movie-details-section -->
+				{% if not content.src %}
+				<div class="movie-details-section">
+					<h2>Seasons</h2>
+					<div class="movie-details-section">
+
+						<div class="row">
+							{% for episode in episodes %}
+
+							<div class="col-12 col-md-6 col-lg-6 col-xl-4">
+								
+								<div class="item-listing-container-skrn">
+									<a href="{% if episode.src %}{% url 'video' episode.slug %}{% else %}{% url 'epi' episode.slug %}{% endif %}"><img style="height: 20rem" src="{{ episode.img.url }}" alt="Listing"></a>
+									<div class="item-listing-text-skrn">
+										<div class="item-listing-text-skrn-vertical-align"><h6><a href="{% if episode.src %}{% url 'video' episode.slug %}{% else %}{% url 'epi' episode.slug %}{% endif %}">{{episode.name}}</a></h6>
+										</div><!-- close .item-listing-text-skrn-vertical-align -->
+									</div><!-- close .item-listing-text-skrn -->
+								</div><!-- close .item-listing-container-skrn -->
+								
+							</div><!-- close .col -->
+							{% endfor %}
+						</div><!-- close .row -->
+					
+					</div><!-- close .movie-details-section -->
+
+					
+				</div><!-- close .movie-details-section -->	
+				{% endif %}			
+			</div><!-- close .dashboard-container -->
+		</main>
+		
+		
+	{% endblock %}

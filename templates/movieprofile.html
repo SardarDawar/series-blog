@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<main id="col-main" style="padding: 3rem;">
+	<div class="clearfix"></div>
+				<div class="row">
+					{% if episodes %}
+                    {% for episode in episodes %}
+					<div class="col-12 col-md-6 col-lg-4 col-xl-3">
+						<div class="item-listing-container-skrn">
+							<a href="{% if episode.src %} {% url 'video' episode.slug %} {% else %} {% url 'epi' episode.slug %} {% endif %}"><img style="height: 20rem" src="{{ episode.img.url }}" alt="Listing"></a>
+							<div class="item-listing-text-skrn">
+								<div class="item-listing-text-skrn-vertical-align"><h6><a href="{% if episode.src %} {% url 'video' episode.slug %} {% else %} {% url 'epi' episode.slug %} {% endif %}">{{ episode.name }}</a></h6>
+							      <!-- <div
+							        class="circle-rating-pro"
+							        data-value="{{episode.rating}}"
+							        data-animation-start-value="0.86"
+							        data-size="32"
+							        data-thickness="3"
+							        data-fill="{
+							          &quot;color&quot;: &quot;#42b740&quot;
+							        }"
+							        data-empty-fill="#def6de"
+							        data-reverse="true"
+							      ><span style="color:#42b740;">{{episode.rating}}</span></div> -->
+								</div>
+								<!-- close .item-listing-text-skrn-vertical-align -->
+							</div><!-- close .item-listing-text-skrn -->
+						</div><!-- close .item-listing-container-skrn -->
+					</div><!-- close .col -->
+					{% endfor %}
+					{% else %}
+					<h2 style="padding-left: 31rem; padding-top: 5rem; padding-bottom: 5rem;">Coming Soon</h2>
+					{% endif %}
+				</div><!-- close .row -->
+				
+				
+				<!-- <ul class="page-numbers">
+					<li><a class="previous page-numbers" href="#!"><i class="fas fa-chevron-left"></i></a></li>
+					<li><span class="page-numbers current">1</span></li>
+					<li><a class="page-numbers" href="#!">2</a></li>
+					<li><a class="page-numbers" href="#!">3</a></li>
+					<li><a class="page-numbers" href="#!">4</a></li>
+					<li><a class="next page-numbers" href="#!"><i class="fas fa-chevron-right"></i></a></li>
+				</ul> -->
+				
+						
+			</div><!-- close .dashboard-container -->
+			</div>
+		{% endblock content %}

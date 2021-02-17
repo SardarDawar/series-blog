@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-1"><label for="name"> Name</label></div>
+    <div class="col-11"><input type="text" name="name" id="name" placeholder="Enter Name" /></div>
+    <div class="col-1"><label for="email"> Email</label></div>
+    <div class="col-11"><input type="email" name="email" id="email" placeholder="Enter email" /></div>
+    <div class="col-1"><label for="c_body"> Comment</label></div>
+    <div class="col-11"><input type="text" name="c_body" id="c_body" placeholder="Write Comments"
+            style="width: 40%; height: 100px; padding: 10px;" /></div>
+    <br>
+    <div class="1"><button type="submit" name="comment_id" class="btn btn-info" id="btncomnt">
+            Comment
+        </button></div>
+
+
+</div>
+
+
+
+
+
+
+
+<div id="video-search-header-filtering">
+    <form action="{% url 'home' %}" method="GET" id="video-search-header-filtering-padding">
+        <div class="row">
+            <div class="col-sm extra-padding">
+                <h5>Type:</h5>
+                
+                <div class="row">
+                    {% for category in categories %}
+                    <div class="col-sm">
+                        <label class="checkbox-pro-container">{{ category.name }}
+                          <input name="{{ category.slug }}" type="checkbox" checked="checked" id="movies-type" value="{{category.id}}">
+                          <span class="checkmark-pro"></span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="dotted-dividers-pro"></div>
+            </div><!-- close .col -->
+            <!-- close .col -->
+            
+            
+        </div><!-- close .row -->
+        <div id="video-search-header-buttons">
+            <button type="submit" class="btn btn-green-pro">Filter Search</button>
+            
+            <a href="#!" class="btn">Reset</a>
+        </div><!-- close #video-search-header-buttons -->
+    </form><!-- #video-search-header-filtering-padding -->
+</div><!-- close #video-search-header-filtering -->
