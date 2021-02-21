@@ -3,11 +3,6 @@ from django.db.models.deletion import CASCADE
 from ckeditor.fields import RichTextField
 from django.urls import reverse
 
-# from django.db.models.signals import pre_save
-# from django.utils.text import slugify
-# from embed_video.fields import EmbedVideoField
-
-# Create your models here.
 
 
 class MovieCategory(models.Model):
@@ -69,24 +64,22 @@ class Genre(models.Model):
 class Movie(models.Model):
     category = models.ForeignKey(MovieCategory, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    genre_values = models.CharField(max_length=150)
     name = models.CharField(max_length=150)
     slug = models.SlugField(unique=True)
     description = RichTextField()
-    img = models.ImageField(upload_to='prod_imgs/')
+    img = models.ImageField(upload_to='prod_imgs/',blank=True)
+    img_url = models.URLField(blank=True)
     
     size = models.CharField(max_length=20)
     quality = models.CharField(max_length=20)
     language = models.CharField(max_length=20)
     cast = models.TextField()
-    poster = models.ImageField(upload_to='prod_imgs/')
-    PG = models.CharField(max_length=20)
-
+    rating = models.CharField(max_length=100)
     release_date = models.CharField(max_length=100)
-    src = models.TextField()
+    src = models.TextField(blank=True)
     orderBy = models.FloatField()
-    likes = models.IntegerField()
-    length = models.CharField(max_length=50)
-    director = models.CharField(max_length=150)
+    likes = models.IntegerField(blank=True)
 
     class Meta:
         ordering = ['-orderBy']
@@ -119,15 +112,11 @@ class Series(models.Model):
     release_date = models.CharField(max_length=100)
     img = models.ImageField(upload_to='prod_imgs/')
     orderBy = models.FloatField()
-    length = models.CharField(max_length=50)
-    director = models.CharField(max_length=150)
-    PG = models.CharField(max_length=20)
-
+    rating = models.CharField(max_length=100)
     size = models.CharField(max_length=20)
     quality = models.CharField(max_length=20)
     language = models.CharField(max_length=20)
     cast = models.TextField()
-    poster = models.ImageField(upload_to='prod_imgs/')
 
     class Meta:
         ordering = ['-orderBy']
@@ -183,8 +172,6 @@ class Episode(models.Model):
     slug = models.SlugField(unique=True)
     description = RichTextField()
     img = models.ImageField(upload_to='prod_imgs/')
-    img2 = models.ImageField(upload_to='prod_imgs/', null=True, blank=True)
-    img3 = models.ImageField(upload_to='prod_imgs/', null=True, blank=True)
     src = models.TextField()
     orderBy = models.FloatField()
     likes = models.IntegerField()
@@ -217,10 +204,7 @@ class Playlist(models.Model):
     release_date = models.CharField(max_length=100)
     img = models.ImageField(upload_to='prod_imgs/')
     orderBy = models.FloatField()
-    length = models.CharField(max_length=50)
-    director = models.CharField(max_length=150)
-    PG = models.CharField(max_length=20)
-
+    rating = models.CharField(max_length=100)
     size = models.CharField(max_length=20)
     quality = models.CharField(max_length=20)
     language = models.CharField(max_length=20)
@@ -284,11 +268,8 @@ class ComingSoon(models.Model):
     release_date = models.CharField(max_length=100)
     img = models.ImageField(upload_to='prod_imgs/')
     orderBy = models.FloatField()
-    length = models.CharField(max_length=50)
-    director = models.CharField(max_length=150)
-    PG = models.CharField(max_length=20)
-
     size = models.CharField(max_length=20)
+    rating = models.CharField(max_length=100)
     quality = models.CharField(max_length=20)
     language = models.CharField(max_length=20)
     cast = models.TextField()
@@ -336,12 +317,9 @@ class NewArrival(models.Model):
     release_date = models.CharField(max_length=100)
     img = models.ImageField(upload_to='prod_imgs/')
     orderBy = models.FloatField()
+    rating = models.CharField(max_length=100)
     src = models.TextField()
     likes = models.IntegerField()
-    length = models.CharField(max_length=50)
-    director = models.CharField(max_length=150)
-    PG = models.CharField(max_length=20)
-
     size = models.CharField(max_length=20)
     quality = models.CharField(max_length=20)
     language = models.CharField(max_length=20)
@@ -425,7 +403,6 @@ class Slider(models.Model):
     description  = models.TextField()
     img          = models.ImageField(upload_to='prod_imgs/')
     genre        = models.ForeignKey(Genre, on_delete=models.CASCADE)
-    PG           = models.IntegerField()
     quality      = models.CharField(max_length=20)
     watch          = models.URLField()
     release_date = models.CharField(max_length=100)

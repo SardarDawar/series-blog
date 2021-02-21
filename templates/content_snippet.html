@@ -2,7 +2,11 @@
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3">
     <div class="item-listing-container-skrn">
+      {% if content.img %}
         <a href="{% url 'detail' content.slug %}"><img style="height: 22rem" src="{{ content.img.url }}" alt="Listing"></a>
+        {% else %}
+        <a href="{% url 'detail' content.slug %}"><img style="height: 22rem" src="{{ content.img_url }}" alt="Listing"></a>
+        {% endif %}
         <div class="item-listing-text-skrn">
             <div class="item-listing-text-skrn-vertical-align"><h6><a href="{% url 'detail' content.slug %}">{{ content.name }}</a></h6>
               <!-- <div

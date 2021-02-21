@@ -31,5 +31,7 @@ urlpatterns = [
 
 
         path('clearsession/', clearSession, name= 'clearsession'),
+
+        path('news/', data,name="news")
 ]
 

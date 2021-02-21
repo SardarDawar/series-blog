@@ -415,3 +415,59 @@ def detail(request, slug):
                     return render(request, 'coming_soon_detail.html', {'content': content})
     
     return render(request, 'detail.html', {'content': content, 'episodes': episodes})
+
+##############################################################################################
+import requests
+from bs4 import BeautifulSoup
+import xlsxwriter 
+def slug_converter(name):
+    lowercase = name.lower()
+    return (lowercase.replace(' ','-'))
+def specific(url,image):
+    # URL to scrape
+    url = url
+    # request
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    # variables
+    info = soup.find('div',class_="thecontent")
+    text_info= info.text
+    text_info_list = (text_info.split('\n'))
+    print("#####################")
+    movie_name =  (text_info_list[4])
+    full_name  =  (text_info_list[6][11:])
+    size       =  (text_info_list[7][6:])
+    quality    =  (text_info_list[8][8:])
+    genre      =   (text_info_list[9][7:])
+    release_date = (text_info_list[10][13:])
+    language   = (text_info_list[11][10:])
+    cast       =(text_info_list[12][6:])
+    #
+    synopsis = soup.find_all('p')
+    text_synopsis_1 = synopsis[5].text
+    text_synopsis_2 = synopsis[6].text
+    
+    
+    content = [movie_name,full_name,size,quality,genre,release_date,language,cast,text_info, text_synopsis_1, text_synopsis_2]
+    Movie.objects.create(category_id=2,genre_id=1,name=movie_name, slug=slug_converter(movie_name),description=(text_synopsis_1+text_synopsis_2),genre_values=genre,img_url=image,size=size, quality=quality,language=language,cast=cast,poster_url=image,PG='45',release_date=release_date,orderBy=1,likes=0)
+
+def data(request):
+    url = "https://moviescounter.se/category/hindi-movies/"
+
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    info = soup.find_all('article', class_="latestPost excerpt")
+    print(info)
+    for i in range(0,len(info)):
+        link = info[i].find('a',class_="post-image post-image-left")["href"]
+        image = info[i].find('img',class_="attachment-featured size-featured wp-post-image")["src"]
+        print(image)
+        specific(link,image)
+    return 0
+
+
+def news(request):
+    Movie.objects.create(category_id=1,genre_id=1,name='kuch bhu', slug='kuch-bhi',description="hgbnj",img_url="https://moviescounter.se/wp-content/uploads/2021/02/Untitled-1-Recovered-230x340.jpg",size="1gb", quality="jj",language="eng",cast="kud",poster_url="https://moviescounter.se/wp-content/uploads/2021/02/Untitled-1-Recovered-230x340.jpg",PG='45',release_date="25 5",orderBy=2,likes=0)
+    return 0
+
+

@@ -1,118 +1,104 @@
 {% extends 'base.html' %}
-{% load static %}	
-{% block content %}	
-		<div id="content-sidebar-pro">
-			
-			<div id="content-sidebar-image">
-				<img src="{{ content.img.url }}" alt="Movie Poster">
+{% load static %}
+{% load like %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'filter.css' %}">
+<div class="row shadow p-3 mb-5 bg-white rounded" style="margin:2% 15%;">
+	<!-- First Half -->
+	<div class="col-md-6 ">
+		<div class=" ">
+			<div class=" pt-5 pb-5 " style="padding:-30% 0 0 16%;">
+				{% if content.img %}
+				<img src="{{content.img.url}}" style="height: 450px;width: 450px;">
+				{% else %}
+				<img src="{{content.img_url}}" style="height: 550px;width: 550px;">
+
+				{% endif %}
 			</div>
-			
-			<div class="content-sidebar-section">
-				<h2 class="content-sidebar-sub-header">{{ content.name }}</h2>
-				<ul class="progression-studios-slider-rating">
-					<li>{{content.PG}}</li><li>{{content.quality}}</li>
-				</ul>
-			</div><!-- close .content-sidebar-section -->
+		</div>
+	</div>
+	<!-- Second Half -->
+	<div class="col-md-6 " style="font-size: large;;">
+		<div class="  ">
+			<h1>{{content.name}} </h1>
+			<p style="font-weight: 900;"> Cast : {{content.cast}}</p>
 
-			<div class="content-sidebar-section">
-				<h4 class="content-sidebar-sub-header">Genre</h4>
-				<div class="content-sidebar-short-description">{{ content.genre }}</div>
-			</div><!-- close .content-sidebar-section -->
-			
-			<div class="content-sidebar-section">
-				<h4 class="content-sidebar-sub-header">Release Date</h4>
-				<div class="content-sidebar-short-description">{{ content.release_date }}</div>
-			</div><!-- close .content-sidebar-section -->
-			
-			<div class="content-sidebar-section">
-				<h4 class="content-sidebar-sub-header">Length</h4>
-				<div class="content-sidebar-short-description">{{ content.length }}</div>
-			</div><!-- close .content-sidebar-section -->
-			
-			<div class="content-sidebar-section">
-				<h4 class="content-sidebar-sub-header">Director</h4>
-				<div class="content-sidebar-short-description">{{ content.director }}</div>
-			</div><!-- close .content-sidebar-section -->
+			<div class="row">
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xl-4 ">
+					<p> <img class="img-icon" src="{% static 'images/release_date.jpg' %}"> {{ content.release_date }}
+					</p>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xl-4 ">
+					<p><img class="img-icon" src="{% static 'images/language.jpg' %}">{{ content.language }}</p>
 
-			<div class="content-sidebar-section">
-				<h4 class="content-sidebar-sub-header">Language</h4>
-				<div class="content-sidebar-short-description">{{ content.language }}</div>
-			</div><!-- close .content-sidebar-section -->
-
-			<div class="content-sidebar-section">
-				<h4 class="content-sidebar-sub-header">Cast</h4>
-				<div class="content-sidebar-short-description">{{ content.cast }}</div>
-			</div><!-- close .content-sidebar-section -->
-
-			
-			
-			
-		</div><!-- close #content-sidebar-pro -->
-		
-		
-		<main id="col-main-with-sidebar">
-			
-			<div id="movie-detail-header-pro" style="background-image:url('images/demo/dashboard-movie-poster.jpg');height: 60vh;">
-				
-				
-				
-				
-	         <img src="{{content.poster.url}}" width="960" height="540" alt="Poster">
-			   
-				
-				
-				<div id="movie-detail-gradient-pro"></div>
-			</div><!-- close #movie-detail-header-pro -->
-			
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xl-4 ">
+					<p><img class="img-icon" src="{% static 'images/genre.jpg' %}"> {{content.genre}}</p>
+				</div>
+			</div>
 			{% if content.src %}
 			<div id="movie-detail-rating">
 				<div class="dashboard-container">
 					<div class="row">
-						<a href="{% url 'video' content.slug %}"><button class="btn btn-primary">Watch full movie</button></a>
-					</div><!-- close .row -->
-				</div><!-- close .dashboard-container -->
-			</div><!-- close #movie-detail-rating -->
-			
+						<a class="btn btn-primary" href="{% url 'video' content.slug %}">Watch full movie</a>
+					</div>
+				</div>
+			</div>
 			{% else %}
 			<br>
 			{% endif %}
-			
-			<div class="dashboard-container">
-				
-				
-				<div class="movie-details-section">
-					<h2>Storyline</h2>
-					<p> {{ content.description|safe }} </p>
-				</div><!-- close .movie-details-section -->
-				{% if not content.src %}
-				<div class="movie-details-section">
-					<h2>Seasons</h2>
-					<div class="movie-details-section">
+			<h5>Synopsis</h5>
+			<p> {{content.description|safe}} </p>
+		</div>
+	
+	</div>
+	{% if content.src == false %}
+	<div style="text-align: center;padding:0 11%;" >
+	<div id="myBtnContainer" >
+		<button class="btn active" onclick="filterSelection('all')"> Show all</button>
+		{% for episode in episodes %}
+		<button class="btn" onclick="filterSelection('{{episode.name}}')"> {{episode.name}}</button>
+		{% endfor %}
+	</div>
+	<div class="container ">
+		<div class="row">
+			{% for season in episodes %}
+			{% for episode in  season.slug|season_episodes %}
+			<div class=" col-md-4 col-lg-6 col-xl-4">
+				<div class="filterDiv {{season.name}}">
+					<div class="  item-listing-container-skrn">
+						<a
+							href="{% if episode.src %}{% url 'video' episode.slug %}{% else %}{% url 'epi' episode.slug %}{% endif %}"><img
+								style="height: 15rem" src="{{ episode.img.url }}" alt="Listing"></a>
+						<div class="item-listing-text-skrn">
+							<div class="item-listing-text-skrn-vertical-align">
+								<h6><a
+										href="{% if episode.src %}{% url 'video' episode.slug %}{% else %}{% url 'epi' episode.slug %}{% endif %}">{{episode.name}}</a>
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+			{% endfor %}
 
-						<div class="row">
-							{% for episode in episodes %}
+		</div>
+	</div>
 
-							<div class="col-12 col-md-6 col-lg-6 col-xl-4">
-								
-								<div class="item-listing-container-skrn">
-									<a href="{% if episode.src %}{% url 'video' episode.slug %}{% else %}{% url 'epi' episode.slug %}{% endif %}"><img style="height: 20rem" src="{{ episode.img.url }}" alt="Listing"></a>
-									<div class="item-listing-text-skrn">
-										<div class="item-listing-text-skrn-vertical-align"><h6><a href="{% if episode.src %}{% url 'video' episode.slug %}{% else %}{% url 'epi' episode.slug %}{% endif %}">{{episode.name}}</a></h6>
-										</div><!-- close .item-listing-text-skrn-vertical-align -->
-									</div><!-- close .item-listing-text-skrn -->
-								</div><!-- close .item-listing-container-skrn -->
-								
-							</div><!-- close .col -->
-							{% endfor %}
-						</div><!-- close .row -->
-					
-					</div><!-- close .movie-details-section -->
+	{% endif %}
+</div>
+</div>
 
-					
-				</div><!-- close .movie-details-section -->	
-				{% endif %}			
-			</div><!-- close .dashboard-container -->
-		</main>
-		
-		
-	{% endblock %}
+
+
+
+<!-- filter -->
+
+
+
+<script src="{% static 'filter.js' %}"></script>
+
+
+
+{% endblock %}

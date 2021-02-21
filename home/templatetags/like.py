@@ -1,6 +1,6 @@
 from django import template
 # from django.shortcuts import get_object_or_404
-# from ..models import Episode 
+from ..models import Episode 
 
 register = template.Library()
 
@@ -23,3 +23,9 @@ def how_many_in_cart(product, cart):
             cartGet = cart.get(id)
             return cartGet
     return 0
+
+
+@register.filter(name='season_episodes')
+def season_episodes(value):
+    episodes_list = Episode.get_episodes_by_season(value)
+    return episodes_list

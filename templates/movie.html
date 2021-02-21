@@ -46,8 +46,13 @@
     {% for content in contents %}
     <div class="col-12 col-md-6 col-lg-4 col-xl-3">
         <div class="item-listing-container-skrn">
+            {% if img %}
             <a href="{% url 'detail' content.slug %}"><img style="height: 20rem" src="{{ content.img.url }}"
                     alt="Listing"></a>
+            {% else %}
+            <a href="{% url 'detail' content.slug %}"><img style="height: 20rem" src="{{ content.img_url }}"
+                alt="Listing"></a>
+            {% endif %}
             <div class="item-listing-text-skrn">
                 <div class="item-listing-text-skrn-vertical-align">
                     <h6><a href="{% url 'detail' content.slug %}">{{ content.name }}</a></h6>
