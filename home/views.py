@@ -435,6 +435,8 @@ def detail(request, slug):
     try:
         content = Movie.objects.get(slug=slug)
         comments = Comment.get_all_mv_comments(slug)
+        return render(request, 'detail.html', {'content': content, "comments":comments})
+
 
     except:
         try:
@@ -452,7 +454,7 @@ def detail(request, slug):
                     return render(request, 'coming_soon_detail.html', {'content': content})
 
     
-    return render(request, 'detail.html', {'content': content, 'episodes': episodes,"comments":comments})
+    return render(request, 'detail.html', {'content': content, 'episodes': episodes,})
 
 ##############################################################################################
 import requests
