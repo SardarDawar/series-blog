@@ -5,6 +5,7 @@ from django.http import JsonResponse, request
 from operator import attrgetter
 from .models import *
 from .filters import *
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 
@@ -23,7 +24,18 @@ def homeView(request):
     slides = Slider.get_all_slides()
     content = searchContent(query)
     content = sorted(content, key = attrgetter('orderBy'), reverse=True)
+                ########################### PAGINATION ##################
+    paginator = Paginator(content ,100) # Shows only 10 records per page
 
+    page = request.GET.get('page')
+    try:
+        content = paginator.page(page)
+    except PageNotAnInteger:
+    # If page is not an integer, deliver first page.
+        content = paginator.page(1)
+    except EmptyPage:
+    # If page is out of range (e.g. 7777), deliver last page of results.
+        content = paginator.page(paginator.num_pages)
     return render(request, 'home.html', {'contents':content, 'query': query, 'slides': slides})
 
 
@@ -71,6 +83,18 @@ def movie(request):
     content = movieFilter.qs
     categories = MovieCategory.get_all_categories()
     genres = Genre.get_all_genres()
+                ########################### PAGINATION ##################
+    paginator = Paginator(content ,50) # Shows only 10 records per page
+
+    page = request.GET.get('page')
+    try:
+        content = paginator.page(page)
+    except PageNotAnInteger:
+    # If page is not an integer, deliver first page.
+        content = paginator.page(1)
+    except EmptyPage:
+    # If page is out of range (e.g. 7777), deliver last page of results.
+        content = paginator.page(paginator.num_pages)
     return render(request, 'movie.html', {'contents':content, 'categories': categories, 'genres': genres})
 
 
@@ -136,7 +160,7 @@ def movieProfile(request, slug):
 
     except:
         episodes = Playlist_items.get_playlist_items(slug)
-
+    
     return render(request, 'movieprofile.html', {'episodes': episodes})
 
 
@@ -336,7 +360,18 @@ def movieFilter(request, slug):
         content = Movie.get_movies_by_genre(slug)
     categories = MovieCategory.get_all_categories()
     genres = Genre.get_all_genres()
+                ########################### PAGINATION ##################
+    paginator = Paginator(content ,50) # Shows only 10 records per page
 
+    page = request.GET.get('page')
+    try:
+        content = paginator.page(page)
+    except PageNotAnInteger:
+    # If page is not an integer, deliver first page.
+        content = paginator.page(1)
+    except EmptyPage:
+    # If page is out of range (e.g. 7777), deliver last page of results.
+        content = paginator.page(paginator.num_pages)
     return render(request, 'movie.html', {'contents':content, 'categories': categories, 'genres': genres})
 
 def seriesFilter(request, slug):
@@ -399,6 +434,8 @@ def detail(request, slug):
     episodes = None
     try:
         content = Movie.objects.get(slug=slug)
+        comments = Comment.get_all_mv_comments(slug)
+
     except:
         try:
             content = Series.objects.get(slug=slug)
@@ -413,56 +450,104 @@ def detail(request, slug):
                 except:
                     content = ComingSoon.objects.get(slug=slug)
                     return render(request, 'coming_soon_detail.html', {'content': content})
+
     
-    return render(request, 'detail.html', {'content': content, 'episodes': episodes})
+    return render(request, 'detail.html', {'content': content, 'episodes': episodes,"comments":comments})
 
 ##############################################################################################
 import requests
 from bs4 import BeautifulSoup
-import xlsxwriter 
 def slug_converter(name):
     lowercase = name.lower()
     return (lowercase.replace(' ','-'))
-def specific(url,image):
-    # URL to scrape
-    url = url
+
+    
+def scrape_data(link):
+        # URL to scrape
+    url = link
     # request
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
+    # category
+    category = soup.find('i',class_="limpiar").text
+    category_check = category.find('Hindi')
     # variables
-    info = soup.find('div',class_="thecontent")
-    text_info= info.text
-    text_info_list = (text_info.split('\n'))
-    print("#####################")
-    movie_name =  (text_info_list[4])
-    full_name  =  (text_info_list[6][11:])
-    size       =  (text_info_list[7][6:])
-    quality    =  (text_info_list[8][8:])
-    genre      =   (text_info_list[9][7:])
-    release_date = (text_info_list[10][13:])
-    language   = (text_info_list[11][10:])
-    cast       =(text_info_list[12][6:])
-    #
-    synopsis = soup.find_all('p')
-    text_synopsis_1 = synopsis[5].text
-    text_synopsis_2 = synopsis[6].text
+    info = soup.find('div',class_="fix")
+    image = info.find('img')['data-lazy-src']
+    try:
+        quality = info.find('span').text
+    except:
+        quality = "N/A"
+    data = soup.find('div',class_="data")
+    movie_name = data.find('h1').text
+    print(movie_name)
+    try:
+        meta_name = data.find_all(itemprop="name")[1].text
+    except:
+        meta_name = movie_name
+    release_date = data.find(itemprop="datePublished").text
+    length = data.find(itemprop="duration").text
+    try:
+        rating = soup.find(itemprop="ratingValue").text
+        ratingCount = soup.find(itemprop="ratingCount").text
+    except:
+        rating = "N/A"
+    synopsis_sc = soup.find_all("p")[6:8]
+    synopsis = ''.join(map(str, synopsis_sc))
+
+    metas = soup.find_all('div', class_="metatags" )
+    try:
+        directors = metas[0].find_all("a")
+        directors_list = []
+        [directors_list.append(i.text+",") for i in directors ]
+        director = ''.join(map(str, directors_list))
+    except:
+        directors = "N/A"
+    try:
+        stars = metas[1].find_all("a")
+        stars_list = []
+        [stars_list.append(i.text+",") for i in stars ]
+        cast = ''.join(map(str, stars_list))
+    except:
+        cast = "N/A"
+    #form fields
+    try:
+        fname = soup.find('input',{"name":"FName"}).get('value')
+        fsize = soup.find('input',{"name":"FSize"}).get('value')
+        fsid = soup.find('input',{"name":"FSID"}).get('value')
+        print(fname, fsize, fsid)
+    except:
+        fname = 'upcoming'
+        fsize = 'upcoming'
+        fsid  = 'upcoming'
+    slug=slug_converter(movie_name)
     
-    
-    content = [movie_name,full_name,size,quality,genre,release_date,language,cast,text_info, text_synopsis_1, text_synopsis_2]
-    Movie.objects.create(category_id=2,genre_id=1,name=movie_name, slug=slug_converter(movie_name),description=(text_synopsis_1+text_synopsis_2),genre_values=genre,img_url=image,size=size, quality=quality,language=language,cast=cast,poster_url=image,PG='45',release_date=release_date,orderBy=1,likes=0)
+    check_variable = True
+    for i in Movie.objects.all():
+        if i.slug == slug:
+            check_variable= False
+    if check_variable == True:
+        if category_check == -1:
+            Movie.objects.create(category_id=1,genre_id=4,name=movie_name,slug=slug,meta_name=meta_name,description=synopsis,img_url=image,rating=rating, quality=quality,language="Hindi",cast=cast ,length=length, director=director,fname=fname,fsize=fsize,fsid=fsid,release_date=release_date,orderBy=1,likes=0)
+        else:
+            Movie.objects.create(category_id=2,genre_id=4,name=movie_name,slug=slug_converter(movie_name),meta_name=meta_name,description=synopsis,img_url=image,rating=rating, quality=quality,language="English",cast=cast ,length=length, director=director,fname=fname,fsize=fsize,fsid=fsid,release_date=release_date,orderBy=1,likes=0)
+
+
+#    content = [movie_name,full_name,size,quality,genre,release_date,language,cast,text_info, text_synopsis_1, text_synopsis_2]
 
 def data(request):
-    url = "https://moviescounter.se/category/hindi-movies/"
 
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    info = soup.find_all('article', class_="latestPost excerpt")
-    print(info)
-    for i in range(0,len(info)):
-        link = info[i].find('a',class_="post-image post-image-left")["href"]
-        image = info[i].find('img',class_="attachment-featured size-featured wp-post-image")["src"]
-        print(image)
-        specific(link,image)
+    for i in range(1,17):
+        url = "https://www.foumovies.se/category/comedy/page/{}/".format(i)
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        info = soup.find_all('div', class_="item")
+        print(i)
+
+        for i in info:
+            image = i.find('img')['data-lazy-src']
+            link = i.find('a')['href']
+            scrape_data(link)
     return 0
 
 

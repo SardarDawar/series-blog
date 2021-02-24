@@ -44,15 +44,74 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 /*
 =============================================== 01. FONT STYLES ===============================================
 */
+/* ***************************** custom *****************************/
+.img-icon{
+	height: 40px;
+}
+.pagination {
+	display: flex;
+	margin-left: 50px;
+
+  }
+
+  .pagination li {
+    color: black;
+    float: left;
+	padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+  }
+
+  .pagination li.active {
+    background-color: #3db13d;
+    color: white;
+    border: 1px solid #3db13d;
+  }
+
+  .pagination li:hover:not(.active) {
+    background-color: #ddd;
+  }
+
+
+  
+  .loader {
+	display: none;
+	bottom: 50%;
+	left: 90%;
+	position: relative;
+	transform: translate(-50%, -50%);
+  }
+  
+  .loading {
+	border: 2px solid #ccc;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	border-top-color: #1ecd97;
+	border-left-color: #1ecd97;
+	animation: spin 1s infinite ease-in;
+  }
+  
+  @keyframes spin {
+	0% {
+	  transform: rotate(0deg);
+	}
+  
+	100% {
+	  transform: rotate(360deg);
+	}
+  }
+  
+  /******************************** custom  *********************************/
 body, input, textarea, select { 
 	font-family: 'Lato', sans-serif;
 	line-height: 1.8; 
 	color:#555555;
 	font-size:15px;
 }
-.img-icon{
-	height: 40px;
-}
+
 hr {
 	border-color:rgba(0,0,0,  0.09);
 	margin-bottom: 1.5rem;

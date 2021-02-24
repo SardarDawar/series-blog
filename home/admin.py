@@ -13,7 +13,7 @@ class MovieCategoryAdmin(admin.ModelAdmin):
 
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'genre', 'slug']
+    list_display = ['name', 'category', 'genre', 'slug',"time_added","time_updated"]
     prepopulated_fields = {'slug': ('name','category')}
     list_filter = ['category', 'genre']
 

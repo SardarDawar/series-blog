@@ -4,43 +4,6 @@
 
 {% block content %}
 <main id="col-main">
-	{% if not query %}
-	<div class="flexslider progression-studios-dashboard-slider" style="height: 60vh;" >
-		<ul class="slides">
-			{% for slider in slides %}
-			  <li class="progression_studios_animate_left">
-				  <div class="progression-studios-slider-dashboard-image-background" style="background-image:url({{slider.img.url}});height: 60vh;">
-					<div class="progression-studios-slider-display-table">
-						<div class="progression-studios-slider-vertical-align">
-							<div class="container">
-								<div class="progression-studios-slider-dashboard-caption-width">
-									<div class="progression-studios-slider-caption-align">
-										<h6>{{slider.category}}</h6>
-										<ul class="progression-studios-slider-rating">
-											<li>{{slider.PG}}</li><li>{{slider.quality}}</li>
-										</ul>
-										<h2>{{slider.name}}</h2>
-										<ul class="progression-studios-slider-meta">
-											<li>{{slider.release_date}}</li>
-											<li>{{slider.genre}}</li>
-										</ul>
-										<p class="progression-studios-slider-description">{{slider.description}}</p>	
-										<a class="btn btn-primary" href={{slider.watch}}>Watch Online</a>
-									</div><!-- close .progression-studios-slider-caption-align -->
-								</div><!-- close .progression-studios-slider-caption-width -->
-							
-							</div><!-- close .container -->
-						  
-						  </div><!-- close .progression-studios-slider-vertical-align -->
-					  </div><!-- close .progression-studios-slider-display-table -->
-				  
-					  <div class="progression-studios-slider-mobile-background-cover"></div>
-				  </div><!-- close .progression-studios-slider-image-background -->
-			  </li>
-				{% endfor %}
-		  </ul>
-	  </div><!-- close .progression-studios-slider - See /js/script.js file for options -->
-	  {% endif %}
 	<div class="clearfix"></div>
 			{% if contents %}
 				<div class="row" style="padding: 3rem;">
@@ -54,6 +17,26 @@
 				</div><!-- close .row -->
  			{% endif %}
 				
-						
+			 {% if contents.has_other_pages %}
+			 <ul class="pagination">
+			   {% if contents.has_previous %}
+				 <li><a href="?page={{ contents.previous_page_number }}">&laquo;</a></li>
+			   {% else %}
+				 <li class="disabled"><span>&laquo;</span></li>
+			   {% endif %}
+			   {% for i in contents.paginator.page_range %}
+				 {% if contents.number == i %}
+				   <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+				 {% else %}
+				   <li><a href="?page={{ i }}">{{ i }}</a></li>
+				 {% endif %}
+			   {% endfor %}
+			   {% if contents.has_next %}
+				 <li><a href="?page={{ contents.next_page_number }}">&raquo;</a></li>
+			   {% else %}
+				 <li class="disabled"><span>&raquo;</span></li>
+			   {% endif %}
+			 </ul>
+			 {% endif %}		
 			</div>
 		{% endblock content %}

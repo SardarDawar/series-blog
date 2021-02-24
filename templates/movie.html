@@ -7,6 +7,10 @@
 
 
 {% block content %}
+<style>
+
+
+</style>
 <main id="col-main" style="padding-left: 3rem; padding-right: 3rem; padding-bottom: 3rem;">
     <ul class="dashboard-genres-pro">
         {% for category in categories %}
@@ -61,6 +65,8 @@
         </div>
     </div>
     {% endfor %}
+
+    
 </div><!-- close .row -->
 {% else %}
 <div class="row">
@@ -68,9 +74,30 @@
 </div><!-- close .row -->
 {% endif %}
 
-
+{% if contents.has_other_pages %}
+<ul class="pagination">
+  {% if contents.has_previous %}
+    <li><a href="?page={{ contents.previous_page_number }}">&laquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+  {% endif %}
+  {% for i in contents.paginator.page_range %}
+    {% if contents.number == i %}
+      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+      <li><a href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+  {% endfor %}
+  {% if contents.has_next %}
+    <li><a href="?page={{ contents.next_page_number }}">&raquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+  {% endif %}
+</ul>
+{% endif %}
 
 </div>
+
 {% endblock content %}
 
 

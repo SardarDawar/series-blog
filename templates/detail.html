@@ -1,6 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load like %}
+
+{% block meta %}
+<title>{{content.name}} - Upmovieflix MOVIES Upmovieflix MOVIES</title>
+<meta property="og:image" content="{{content.img_url}}" />
+<meta name="description" content="Monster Hunter Free Download HD 720p Highest Qulaity and downloading speed Just in single click Small size Movies download from Upmovieflix"/>
+<link rel="canonical" href="https://upmovieflix.com/detail/{{content.slug}}" />
+<meta property="og:title" content="Monster Hunter Free Download HD 720p - UPMOVIEFLIX MOVIES" />
+<meta property="og:description" content="Monster Hunter Free Download HD 720p Highest Qulaity and downloading speed Just in single click Small size Movies download from Upmovieflix" />
+<meta property="og:url" content="https://upmovieflix.com/detail/{{content.slug}}" />
+<meta property="article:tag" content="{{content.meta_name|safe}} 2020 Download Free" />
+<meta property="article:tag" content="{{content.meta_name|safe}} 2020 movie download Free" />
+<meta property="article:tag" content="{{content.meta_name|safe}} Free Movie download in Hd Quality" />
+<meta property="article:tag" content="{{content.meta_name|safe}} Full Download movie 720p BluRay" />
+<meta property="article:tag" content="{{content.meta_name|safe}} Full hd Movie Download" />
+<meta property="article:section" content="{{content.genre|safe}}" />
+<meta property="article:published_time" content="{{content.time_added}}" />
+<meta property="article:modified_time" content="{{content.time_updated}}" />
+<meta property="og:updated_time" content="{{content.time_updated}}" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="{{content.meta_name|safe}} Free Download HD 720p Highest Qulaity and downloading speed Just in single click Small size Movies download from Upmovieflix" />
+<meta name="twitter:title" content="{{content.meta_name|safe}} Free Download HD 720p - Upmovieflix MOVIES" />
+{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'filter.css' %}">
 <div class="row shadow p-3 mb-5 bg-white rounded" style="margin:2% 15%;">
@@ -47,11 +70,29 @@
 			{% else %}
 			<br>
 			{% endif %}
+			{% if content.fname %}
+			<iframe id="iframe" name="my_iframe" style="display: none;"></iframe>
+
+			<form action="https://moviescounter.se/downloading-start/" method="post" target="my_iframe">
+				<input name="FName" type="hidden" value={{content.fname}} />
+				<input name="FSize" type="hidden" value={{content.fsize}} />
+				<input name="FSID" type="hidden" value={{content.fsid}} />
+				<div >
+				<p style="text-align: center;" ><input class="download-image" alt="Download Movie height=" src="https://www.foumovies.se/wp-content/uploads/2017/01/download-button-large-300x108.png" type="image" width="225"  onclick="spinner()" /></p>
+				
+				</div>
+				<div class="loader">
+					<div class="loading">
+					</div>
+				  </div>
+				</form>
+			{% endif %}
 			<h5>Synopsis</h5>
 			<p> {{content.description|safe}} </p>
 		</div>
 	
 	</div>
+
 	{% if content.src == false %}
 	<div style="text-align: center;padding:0 11%;" >
 	<div id="myBtnContainer" >
@@ -87,7 +128,46 @@
 	</div>
 
 	{% endif %}
+	{% if content.img_url %}
+			   <i style="width: 15%;"></i>
+			   
+	<div id="comment_box" style="font-size: large;">
+		<h3 style="text-align: center;" >Comments Section</h3>
+		{% if comments %}
+		{% for comment in comments %}
+		<b>{{ comment.com_name }}</b> - <i><small>({{ comment.dateAdded }})</small></i><br>
+		{{ comment.body }} <br>
+		<hr>
+		{% endfor %}
+		{% else %}
+		<br><br>
+		<h6>No comments yet..</h6>
+		<hr>
+		{% endif %}
+	</div>
+	
+	<div class="shadow p-3 mb-5 bg-white rounded" style="margin:2% 15%;">
+		<h4 style="text-align: center;" >Add Comments</h4>
+		<p style="font-weight: bold;text-align: center;"><i> Your email will not be published</i></p>
+		
+		<br>
+		<form id="comment_form" action="{% url 'comment' content.slug %}" class="form-style-6" method="POST">
+			{% csrf_token %}
+			<input type="text" id="ep_id" value="{{ content.slug }}" hidden>
+	
+			<input type="text" name="name" id="name" placeholder="Enter Name" />
+			<input type="email" name="email" id="email" placeholder="Enter email" />
+			<textarea name="c_body" id="c_body" cols="30" rows="10" placeholder="Write Comment"></textarea>
+			<input type="submit" value="Comment" />
+	
+	
+	
+		</form>
+	</div>
+	
+	{% endif %}
 </div>
+
 </div>
 
 
@@ -97,8 +177,64 @@
 
 
 
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script>
+	$("document").ready(function () {
+		$("#comment_form").submit(function (e) {
+			console.log('Save Button clicked!')
+			e.preventDefault();
+			const p_url = $(this).attr('action');
+			const comment_text = $('#comment_box').text();
+			const trim = $.trim(comment_text);
+			console.log(trim)
+			let res;
+			var email = $('#email').val();
+			var c_body = $('#c_body').val();
+			var slug = $('#ep_id').val();
+			var name = $('#name').val();
+			this.reset();
+			$.ajax({
+				type: 'POST',
+				url: p_url,
+				data: {
+					'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+					'slug': slug,
+					'email': email,
+					'c_body': c_body,
+					'name': name,
+				},
+				success: function (response) {
+					if (trim == 'No comments yet..') {
+						$('#comment_box').html(`<strong>${name}</strong> - <small><small>Just Now</small></small><br>
+				${c_body} <br><hr>`);
+					}
+					else {
+						$('#comment_box').append(
+							`<strong>${name}</strong> - <small><small>Just Now</small></small><br>
+				${c_body} <br><hr>`)
+					}
+
+
+				},
+				error: function (response) {
+					console.log('error', response)
+				}
+			})
+		});
+
+	});
+
+
+
+</script>
 <script src="{% static 'filter.js' %}"></script>
-
-
+<script type="text/javascript">
+    function spinner() {
+        document.getElementsByClassName("loader")[0].style.display = "block";
+        document.getElementsByClassName("download-image")[0].style.display = "none";
+    }
+</script>  
 
 {% endblock %}
