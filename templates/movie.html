@@ -14,111 +14,117 @@
 <main id="col-main" style="padding-left: 3rem; padding-right: 3rem; padding-bottom: 3rem;">
     <ul class="dashboard-genres-pro">
         {% for category in categories %}
-    
+
         <li id="category">
             <a href="{% url 'moviefilter' category.slug %}">
                 <img src="{{ category.img.url }}" alt="Drama">
                 <h6>{{ category.name }}</h6>
             </a>
         </li>
-    
+
         {% endfor %}
         {% for genre in genres %}
-    
+
         <li id="genre">
             <a href="{% url 'moviefilter' genre.slug %}">
                 <img src="{{ genre.img.url }}" alt="Drama">
                 <h6>{{ genre.name }}</h6>
             </a>
         </li>
-    
+
         {% endfor %}
     </ul>
-	<div class="clearfix"></div>
+    <div class="clearfix"></div>
 
 
 
-<div class="clearfix"></div>
+    <div class="clearfix"></div>
 
 
 
 
 
 
-{% if contents %}
-<div id="main_content" class="row">
-    {% for content in contents %}
-    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-        <div class="item-listing-container-skrn">
-            {% if img %}
-            <a href="{% url 'detail' content.slug %}"><img style="height: 20rem" src="{{ content.img.url }}"
-                    alt="Listing"></a>
-            {% else %}
-            <a href="{% url 'detail' content.slug %}"><img style="height: 20rem" src="{{ content.img_url }}"
-                alt="Listing"></a>
-            {% endif %}
-            <div class="item-listing-text-skrn">
-                <div class="item-listing-text-skrn-vertical-align">
-                    <h6><a href="{% url 'detail' content.slug %}">{{ content.name }}</a></h6>
+    {% if contents %}
+    <div id="main_content" class="row">
+        {% for content in contents %}
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="item-listing-container-skrn">
+                {% if img %}
+                <a href="{% url 'detail' content.slug %}"><img style="height: 20rem" src="{{ content.img.url }}"
+                        alt="Listing"></a>
+                <div class="item-listing-text-skrn">
+                    <div class="item-listing-text-skrn-vertical-align">
+                        <h6><a href="{% url 'detail' content.slug %}">{{ content.name }}</a></h6>
+                    </div>
                 </div>
+                {% else %}
+                <a href="http://upmovieflix.com/detail/{{content.slug}}"><img style="height: 20rem"
+                        src="{{ content.img_url }}" alt="Listing"></a>
+                <div class="item-listing-text-skrn">
+                    <div class="item-listing-text-skrn-vertical-align">
+                        <h6><a href="http://upmovieflix.com/detail/{{content.slug}}">{{ content.name }}</a></h6>
+                    </div>
+                </div>
+                {% endif %}
+
             </div>
         </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
 
-    
-</div><!-- close .row -->
-{% else %}
-<div class="row">
-    <h1>Coming Soon</h1>
-</div><!-- close .row -->
-{% endif %}
 
-{% if contents.has_other_pages %}
-<ul class="pagination">
-  {% if contents.has_previous %}
-    <li><a href="?page={{ contents.previous_page_number }}">&laquo;</a></li>
-  {% else %}
-    <li class="disabled"><span>&laquo;</span></li>
-  {% endif %}
-  {% for i in contents.paginator.page_range %}
-    {% if contents.number == i %}
-      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    </div><!-- close .row -->
     {% else %}
-      <li><a href="?page={{ i }}">{{ i }}</a></li>
+    <div class="row">
+        <h1>Coming Soon</h1>
+    </div><!-- close .row -->
     {% endif %}
-  {% endfor %}
-  {% if contents.has_next %}
-    <li><a href="?page={{ contents.next_page_number }}">&raquo;</a></li>
-  {% else %}
-    <li class="disabled"><span>&raquo;</span></li>
-  {% endif %}
-</ul>
-{% endif %}
 
-</div>
+    {% if contents.has_other_pages %}
+    <ul class="pagination">
+        {% if contents.has_previous %}
+        <li><a href="?page={{ contents.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in contents.paginator.page_range %}
+        {% if contents.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if contents.has_next %}
+        <li><a href="?page={{ contents.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
 
-{% endblock content %}
+    </div>
 
-
-
-
-{% block javascript %}
-
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.1/js/materialize.min.js"
-    integrity="sha256-SrBfGi+Zp2LhAvy9M1bWOCXztRU9Ztztxmu5BcYPcPE=" crossorigin="anonymous"></script>
-
-<script>
-    $(document).ready(function () {
-
-        // Initialize materialize data picker
-        $('select').formSelect();
-    })
-</script>
+    {% endblock content %}
 
 
-{% endblock javascript %}
+
+
+    {% block javascript %}
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.1/js/materialize.min.js"
+        integrity="sha256-SrBfGi+Zp2LhAvy9M1bWOCXztRU9Ztztxmu5BcYPcPE=" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            // Initialize materialize data picker
+            $('select').formSelect();
+        })
+    </script>
+
+
+    {% endblock javascript %}
