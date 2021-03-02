@@ -27,9 +27,9 @@
   <link rel="stylesheet" href="{% static 'icons/fontawesome/css/fontawesome-all.min.css' %}">
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="{% static 'icons/Iconsmind__Ultimate_Pack/Line%20icons/styles.min.css' %}">
-  {% if content %}
-   {% block meta %}
-   {% endblock %}
+  {% if content or episode %}
+  {% block meta %}
+  {% endblock %}
   {% else %}
   {% include "meta.html" %}
   {% endif %}

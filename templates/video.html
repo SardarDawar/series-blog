@@ -1,6 +1,26 @@
 {% extends 'base.html' %}
 {% load like %}
-
+{% block meta %}
+<title>{{episode.name}} - Upmovieflix </title>
+<meta property="og:image" content="{{episode.img.url}}" />
+<meta name="description" content="Monster Hunter Free Download HD 720p Highest Qulaity and downloading speed Just in single click Small size Movies download from Upmovieflix"/>
+<link rel="canonical" href="https://upmovieflix.com/video/{{episode.slug}}" />
+<meta property="og:title" content="Monster Hunter Free Download HD 720p - UPMOVIEFLIX MOVIES" />
+<meta property="og:description" content="Monster Hunter Free Download HD 720p Highest Qulaity and downloading speed Just in single click Small size Movies download from Upmovieflix" />
+<meta property="og:url" content="https://upmovieflix.com/video/{{episode.slug}}" />
+<meta property="article:tag" content="{{episode.meta_name|safe}} 2020 Download Free" />
+<meta property="article:tag" content="{{episode.meta_name|safe}} 2020 movie download Free" />
+<meta property="article:tag" content="{{episode.meta_name|safe}} Free Movie download in Hd Quality" />
+<meta property="article:tag" content="{{episode.meta_name|safe}} Full Download movie 720p BluRay" />
+<meta property="article:tag" content="{{episode.meta_name|safe}} Full hd Movie Download" />
+<meta property="article:section" content="{{content.genre|safe}}" />
+<meta property="article:published_time" content="{{episode.time_added}}" />
+<meta property="article:modified_time" content="{{episode.time_updated}}" />
+<meta property="og:updated_time" content="{{episode.time_updated}}" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="{{episode.meta_name|safe}} Free Download HD 720p Highest Qulaity and downloading speed Just in single click Small size Movies download from Upmovieflix" />
+<meta name="twitter:title" content="{{episode.meta_name|safe}} Free Download HD 720p - Upmovieflix MOVIES" />
+{% endblock %}
 
 {% block content %}
 <main  id="col-main">
